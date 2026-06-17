@@ -29,8 +29,8 @@ Following the same principles, we find in this file two `require`, but this time
 
 The code we find, in order, is:
 - require_once of `wp-load.php`.
-- `wp()` function call.
-- require_once of `/template-loader.php`.
+- `wp()` function call, that sets up the WordPress Query.
+- require_once of `/template-loader.php`, the file that decides which template will be shown in the frontend.
 
 Time to check what is happening in `wp-load.php`
 
@@ -66,3 +66,69 @@ The `wp-settings.php` file is a big file too, that loads a lot of files, but we 
 6. Then, the `setup_theme` starts with a hook, that ends with the `after_setup_theme` hook. It's important to know that, between this two hooks, WordPress load the `functions.php` of the active theme.
 7. Then we find `init` hook, where most of WordPress is already loaded. We normaly use this hook to add custom post types or custom taxonomies.
 8. Finally, we find `wp_loaded`, that runs when WordPress is fully loaded.
+
+## Summary of what is loaded in each hook
+
+| hook | What is and is not loaded  |
+|---|---|
+| `muplugins_loaded` | Loaded: minimum bootstrap, error handling, Plugin API, server config, MU plugins and network plugin  |
+| `plugins_loaded` | Loaded: Same as before + standard plugins. |
+| `setup_theme` | Loaded: Same as before + initialized query, rewrite, widgets and role objets. Not loaded theme's function.php yet.  |
+| `after_setup_theme` | Loaded: Same as before + theme's function.php + local objet. Note: WordPress is not fully loaded yet. |
+| `init` | Loaded: WordPress finished loading, but headers and not sent yet. Custom hooks and taxonomies are usually hooked here.  |
+| `wp_loaded` | Loaded: WordPress and plugins are fully loaded here. Not loaded: The query. |
+| `wp` | Loaded: WordPress, plugins and the query. We can use is_something (frontpage, page, singular, etc) here. |
+| `template_redirect` | Loaded: Same as before, but it's the last moment before choosing what template or route to show. |
+
+## Request > hook > render explanation
+
+Hooks allow developers to modify how WordPress works in certain points of the execution, without editing the source code and the core files, as they are updated with each update.
+
+We have several: when each plugin is loaded, before or after the theme setup, when almost all WordPress is loaded but headers are not sent (init), or when it is fully loaded.
+
+The dev can add actions or remove them from the hook, with the add_action or remove_action functions, and also create their own using the do_action function.
+
+There is another type of hook called filters. They work similar to actions, but its key difference is that they must return something, as they are used to modify data at a certain point.
+
+## Diagram
+
+```
+request
+	↓
+index.php
+	↓
+wp-blog-header.php
+	↓
+wp-load.php
+	↓
+wp-config.php
+	↓
+wp-settings.php
+	↓
+[We keep loading wp-blog-header.php]	
+wp()
+	↓
+template-loader.php
+```
+
+and then, hooks order:
+
+```
+muplugins_loaded
+	↓
+plugins_loaded
+	↓
+setup_theme
+	↓
+theme's function.php
+	↓
+after_setup_theme
+	↓
+init (WordPress core loaded, not query)
+	↓
+wp_loaded (WordPress and plugins fully loaded, not query yet)
+	↓
+[From now, only in front] wp (WordPress, plugins and query, loaded)
+	↓
+template_redirect (WordPress, plugins and query loaded, last moment before choosing template or route)
+```
