@@ -1,0 +1,36 @@
+.wpil-rest-api-section {
+    background-color: #eee;
+    padding: 2rem 1rem;
+    text-align: center;
+
+    .wpil-rest-api-section__wrapper {
+        margin: 0 auto;
+        max-width: 500px;
+    } 
+
+    .wpil-rest-api-section__title {
+        margin-top: 0;
+    }
+
+    .wpil-rest-api-section__container {
+        margin-top: 2rem;
+    }
+
+    .wpil-rest-api-section__item:not(:first-child) {
+        margin-top: 1rem;
+    }
+
+    .wpil-rest-api-section__item-title {
+        background: #fafafa;
+        display: block;
+        text-align: left;
+        text-decoration: none;
+        padding: 1rem;
+        color: #222;
+    
+        &:hover {
+            text-decoration: underline;
+        }
+    
+    }
+}
