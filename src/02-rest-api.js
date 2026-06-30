@@ -6,7 +6,7 @@ async function getData() {
     const containerContent = container.innerHTML;
     
     try {
-        container.innerText = "Cargando...";
+        container.innerText = "Loading...";
         const response = await fetch(url);
         const responseJson = await response.json();
 
