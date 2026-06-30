@@ -7,7 +7,16 @@ function wpil_enqueue_scripts() {
         'wpil-rest-api-script',
         WPIL_PLUGIN_URL . 'src/02-rest-api.js',
         array(),
-        '1.0'
+        '1.0',
+        true
+    );
+
+    wp_add_inline_script(
+        'wpil-rest-api-script',
+        'const wpilPhpVariables = {
+            restUrl: "' . rest_url('wp/v2/') . '"
+        };',
+        "before"
     );
 
     wp_enqueue_style(
@@ -30,4 +39,3 @@ function wpil_use_custom_template( $template ) {
 }
 
 add_action( 'wp_body_open', 'wpil_use_custom_template' );
-
