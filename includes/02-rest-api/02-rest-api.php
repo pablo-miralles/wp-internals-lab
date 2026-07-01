@@ -39,3 +39,44 @@ function wpil_use_custom_template( $template ) {
 }
 
 add_action( 'wp_body_open', 'wpil_use_custom_template' );
+
+// Adding custom endpoint
+
+add_action('rest_api_init', function() {
+    register_rest_route(
+        'pablo-lab/v1',
+        '/summary',
+        array(
+            'methods' => 'GET',
+            'callback' => 'wpil_print_custom_endpoint_request'
+        )
+    );
+});
+
+function wpil_print_custom_endpoint_request (WP_REST_Request $request) {
+
+    $result = array();
+    $number = absint($request['number']);
+    $text = sanitize_text_field($request['text']);
+
+    switch (true) {
+        case ($number && $text):
+            $result[] = $number;
+            $result[] = $text;
+            break;
+        case ($number):
+            $result[] = $number;
+            $result[] = "Use the param 'text' to sanitize the text";
+            break;
+        case ($text):
+            $result[] = "Use the param 'number' and add a number to convert it to its absolute integer.";
+            $result[] = $text;
+            break;
+        default:
+            $result[] = "Use the param 'number' and add a number to convert it to its absolute integer.";
+            $result[] = "Use the param 'text' to sanitize the text";   
+            break;
+    }
+
+    return $result;
+}
