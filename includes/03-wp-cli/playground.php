@@ -1,36 +1,43 @@
 <?php
 
-class Pablo_Lab {
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
-	function report($args, $assoc_args) {
+	class Pablo_Lab {
 
-		$number = $assoc_args["post_number"];
+		function report($args, $assoc_args) {
 
-		if (($number && gettype($number) === "integer") || "-1" ) {
+			$number = $assoc_args["post_number"];
 
-			$posts = get_posts([
-				'post_type'      => 'post',
-				'posts_per_page' => $number,
-			]);
+			if ($number === "0") {
+				WP_CLI::warning("Please, --post_number can't be 0.");
+			} else if (($number && gettype($number) === "integer" ) || $number === "-1" ) {
 
-			if ($posts) {
+				$posts = get_posts([
+					'post_type'      => 'post',
+					'posts_per_page' => $number,
+				]);
 
-				foreach ( $posts as $post ) {
-					WP_CLI::log( "ID: " . $post->ID . " : " . $post->post_title);
+				if ($posts) {
+
+					foreach ( $posts as $post ) {
+						WP_CLI::log( "ID: " . $post->ID . " : " . $post->post_title);
+					}
+
+				} else {
+					WP_CLI::warning("No post found for this query.");
 				}
+
 			} else {
-				WP_CLI::error("No post found for this query.");
+				WP_CLI::warning("Please, --post_number is required with a valid number.");
 			}
 
-		} else {
-			WP_CLI::error("Please, --post_number is required with a valid number.");
-		}
 
-
-		if ($assoc_args["dry-run"]) {
-			WP_CLI::success("Dry run executed successfully.");
+			if ($assoc_args["dry-run"]) {
+				WP_CLI::success("Dry run executed successfully.");
+			}
 		}
 	}
-}
 
-WP_CLI::add_command( 'pablo-lab', 'Pablo_Lab' );
+	WP_CLI::add_command( 'pablo-lab', 'Pablo_Lab' );
+
+}
