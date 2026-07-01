@@ -12,5 +12,5 @@ Domain Path: /languages
 define( 'WPIL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WPIL_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
-require_once WPIL_PLUGIN_PATH . '/includes/01-wordpress-bootstrap-process.php';
-require_once WPIL_PLUGIN_PATH . '/includes/02-rest-api/02-rest-api.php';
+require_once WPIL_PLUGIN_PATH . '/includes/01-wordpress-bootstrap-process/playground.php';
+require_once WPIL_PLUGIN_PATH . '/includes/02-rest-api/playground.php';

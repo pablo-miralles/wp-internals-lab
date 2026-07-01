@@ -5,7 +5,7 @@
 function wpil_enqueue_scripts() {
     wp_enqueue_script(
         'wpil-rest-api-script',
-        WPIL_PLUGIN_URL . 'src/02-rest-api.js',
+        WPIL_PLUGIN_URL . 'src/rest-api.js',
         array(),
         '1.0',
         true
@@ -21,7 +21,7 @@ function wpil_enqueue_scripts() {
 
     wp_enqueue_style(
         'wpil-rest-api-style',
-        WPIL_PLUGIN_URL . 'src/02-rest-api.css',
+        WPIL_PLUGIN_URL . 'src/rest-api.css',
         array(),
         '1.0'
     );
@@ -34,7 +34,21 @@ add_action('wp_enqueue_scripts', 'wpil_enqueue_scripts');
 
 function wpil_use_custom_template( $template ) {
 
-    include_once WPIL_PLUGIN_PATH . '/includes/02-rest-api/template.php';
+    ?>
+
+        <section class="wpil-rest-api-section">
+            
+            <div class="wpil-rest-api-section__wrapper">
+
+                <h2 class="wpil-rest-api-form__title">Items requested <br>via REST API</h2>
+                
+                <div class="wpil-rest-api-section__container"></div>
+            
+            </div>
+            
+        </section>
+
+    <?php
 
 }
 
