@@ -14,4 +14,6 @@ define( 'WPIL_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
 require_once WPIL_PLUGIN_PATH . '/includes/01-wordpress-bootstrap-process/playground.php';
 require_once WPIL_PLUGIN_PATH . '/includes/02-rest-api/playground.php';
-require_once WPIL_PLUGIN_PATH . '/includes/03-wp-cli/playground.php';
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once WPIL_PLUGIN_PATH . '/includes/03-wp-cli/playground.php';
+}
